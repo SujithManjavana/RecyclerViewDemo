@@ -6,7 +6,10 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-class MyAdapter : RecyclerView.Adapter<MyViewHolder>() {
+class MyAdapter(
+    private val fruits: List<Fruit>,
+    private val myClickListener: (Fruit) -> Unit
+) : RecyclerView.Adapter<MyViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val v = inflater.inflate(R.layout.list_item, parent, false)
@@ -14,14 +17,22 @@ class MyAdapter : RecyclerView.Adapter<MyViewHolder>() {
     }
 
     override fun getItemCount(): Int {
-        return 5
+        return fruits.size
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-
+        holder.bind(fruits[position], myClickListener)
     }
 }
 
 class MyViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {
-    val tv = view.findViewById<TextView>(R.id.tv)
+    fun bind(fruit: Fruit, myClickListener: (Fruit) -> Unit) {
+        val tv = view.findViewById<TextView>(R.id.tv)
+        tv.text = fruit.name
+
+        view.setOnClickListener {
+            myClickListener(fruit)
+        }
+    }
+
 }
